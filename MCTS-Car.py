@@ -50,7 +50,8 @@ class MCTS:
         for i in range(self.num_simulations):
             node = self.root
             env_copy = gym.make(self.env.spec.id)  # Create a new environment instance
-            state, _ = env_copy.reset()
+            state = initial_state
+            env_copy.reset()
 
             # Selection
             while node.is_fully_expanded(self.env.action_space.n) and len(node.children) > 0:
@@ -84,8 +85,13 @@ class MCTS:
             self.best_values.append(best_value)
             self.best_visits.append(best_child.visits if best_child.visits > 0 else 0)
 
+            # Debug information
+            if i % 100 == 0:  # Print every 100 iterations
+                print(f"Iteration {i}: Best Value = {best_value}, Avg Reward = {avg_reward}")
+
             # Check for convergence
             if abs(best_value - previous_best_value) < self.convergence_threshold:
+                print(f"Convergence reached with value: {best_value}")
                 break
             previous_best_value = best_value
 
@@ -103,6 +109,8 @@ class MCTS:
             action = np.random.choice(self.env.action_space.n)
             state, reward, done, _, _ = env_copy.step(action)
             total_reward += reward
+            # Render each step in the simulation if required
+            # env_copy.render()  # Uncomment to visualize simulation (optional)
         return total_reward
 
     def _backpropagate(self, node, reward):
