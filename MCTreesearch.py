@@ -1,5 +1,6 @@
 import numpy as np
 import gymnasium as gym
+import matplotlib.pyplot as plt
 
 class MCTSNode:
     def __init__(self, state, parent=None, action=None):
@@ -29,28 +30,33 @@ class MCTSNode:
         self.visits += 1
         self.value += reward
 
-    def fully_expanded_and_best_child(self, action_size, c_param=1.4):
-        if self.is_fully_expanded(action_size):
-            return self.best_child(c_param)
-        return None
-
 class MCTS:
-    def __init__(self, env, num_simulations=1000):
+    def __init__(self, env, num_simulations=1000, convergence_threshold=0.01):
         self.env = env
         self.num_simulations = num_simulations
+        self.convergence_threshold = convergence_threshold
         self.root = None
+
+        # Tracking performance metrics
+        self.avg_rewards = []
+        self.best_values = []
+        self.best_visits = []
 
     def search(self, initial_state):
         self.root = MCTSNode(state=initial_state)
+        previous_best_value = float('-inf')
 
-        for _ in range(self.num_simulations):
+        for i in range(self.num_simulations):
             node = self.root
-            env_copy = gym.make(self.env.spec.id, render_mode="human")  # Create a fresh environment copy
+            env_copy = gym.make(self.env.spec.id, render_mode="human")  # Create a new environment instance
             state = initial_state
+            env_copy.reset()  # Reset the environment at the start of each simulation
 
             # Selection
             while node.is_fully_expanded(self.env.action_space.n) and len(node.children) > 0:
                 node = node.best_child()
+                if node is None:  # Add this check to debug
+                    break
 
             # Expansion
             if not node.is_fully_expanded(self.env.action_space.n):
@@ -63,9 +69,28 @@ class MCTS:
 
             # Simulation
             reward = self._simulate(env_copy, node.state)
+            print(f"Simulation reward: {reward}")  # Debug print
 
             # Backpropagation
             self._backpropagate(node, reward)
+
+            # Record metrics
+            best_child = self.root.best_child(c_param=0.0)
+            best_value = best_child.value / best_child.visits if best_child.visits > 0 else float('-inf')
+            avg_reward = reward
+            self.avg_rewards.append(avg_reward)
+            self.best_values.append(best_value)
+            self.best_visits.append(best_child.visits if best_child.visits > 0 else 0)
+
+            # Debug information
+            if i % 100 == 0:  # Print every 100 iterations
+                print(f"Iteration {i}: Best Value = {best_value}, Avg Reward = {avg_reward}")
+
+            # Check for convergence
+            if abs(best_value - previous_best_value) < self.convergence_threshold:
+                print(f"Convergence reached with value: {best_value}")
+                break
+            previous_best_value = best_value
 
         # Return the best action from the root node
         return self.root.best_child(c_param=0.0).action
@@ -73,7 +98,9 @@ class MCTS:
     def _select_untried_action(self, node):
         tried_actions = [child.action for child in node.children]
         possible_actions = set(range(self.env.action_space.n)) - set(tried_actions)
-        return np.random.choice(list(possible_actions))
+        action = np.random.choice(list(possible_actions))
+        print(f"Selected untried action: {action}")  # Debug print
+        return action
 
     def _simulate(self, env_copy, state):
         done = False
@@ -82,6 +109,7 @@ class MCTS:
             action = np.random.choice(self.env.action_space.n)
             state, reward, done, _, _ = env_copy.step(action)
             total_reward += reward
+            print(f"Simulated action: {action}, Reward: {reward}")  # Debug print
         return total_reward
 
     def _backpropagate(self, node, reward):
@@ -89,9 +117,39 @@ class MCTS:
             node.update(reward)
             node = node.parent
 
+    def plot_performance(self):
+        plt.figure(figsize=(12, 6))
+
+        # Plot average rewards
+        plt.subplot(1, 3, 1)
+        plt.plot(self.avg_rewards, label='Average Reward')
+        plt.xlabel('Simulation Iteration')
+        plt.ylabel('Average Reward')
+        plt.title('Average Reward per Simulation')
+        plt.legend()
+
+        # Plot best values
+        plt.subplot(1, 3, 2)
+        plt.plot(self.best_values, label='Best Value', color='orange')
+        plt.xlabel('Simulation Iteration')
+        plt.ylabel('Best Value')
+        plt.title('Best Value Estimate')
+        plt.legend()
+
+        # Plot visit counts
+        plt.subplot(1, 3, 3)
+        plt.plot(self.best_visits, label='Best Visits', color='green')
+        plt.xlabel('Simulation Iteration')
+        plt.ylabel('Visit Count')
+        plt.title('Visit Counts of Best Actions')
+        plt.legend()
+
+        plt.tight_layout()
+        plt.show()
+
 # Example usage with FrozenLake-v1 environment
 env = gym.make("FrozenLake-v1", is_slippery=True, render_mode="human")
-mcts = MCTS(env, num_simulations=1000)
+mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.01)
 state, _ = env.reset()
 done = False
 
@@ -103,3 +161,6 @@ while not done:
         print(f"Finished with reward: {reward}")
 
 env.close()
+
+# Plot performance metrics
+mcts.plot_performance()
