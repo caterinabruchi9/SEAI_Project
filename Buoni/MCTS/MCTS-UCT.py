@@ -44,6 +44,7 @@ class MCTS:
         self.avg_rewards = []
         self.best_values = []
         self.best_visits = []
+        self.reward_variances = []
 
     def _simulate(self, env_copy, state):
         done = False
@@ -89,12 +90,19 @@ class MCTS:
             self._backpropagate(node, reward)
 
             # Record metrics
-            best_child = self.root.best_child(c_param=0.0)
+            best_child = self.root.best_child(c_param=1.4)
             best_value = best_child.value / best_child.visits if best_child.visits > 0 else float('-inf')
             avg_reward = reward
             self.avg_rewards.append(avg_reward)
             self.best_values.append(best_value)
             self.best_visits.append(best_child.visits if best_child.visits > 0 else 0)
+
+            # Calculate variance of rewards
+            if len(self.avg_rewards) > 1:
+                rewards_variance = np.var(self.avg_rewards)
+                self.reward_variances.append(rewards_variance)
+            else:
+                self.reward_variances.append(0.0)
 
             # Debug information
             if i % 100 == 0:  # Print every 100 iterations
@@ -106,7 +114,7 @@ class MCTS:
                 break
             previous_best_value = best_value
 
-        return self.root.best_child(c_param=0.0).action
+        return self.root.best_child(c_param=1.4).action
 
     def _select_untried_action(self, node):
         tried_actions = [child.action for child in node.children]
@@ -118,34 +126,38 @@ class MCTS:
             node.update(reward)
             node = node.parent
 
-    def plot_performance(self):
-        plt.figure(figsize=(12, 6))
+    def plot_performance(self, N=100, title=None, filename=""):
+        plt.figure(figsize=(12, 8))
 
         # Plot average rewards
-        plt.subplot(1, 3, 1)
-        plt.plot(self.avg_rewards, label='Average Reward')
+        plt.subplot(1, 2, 1)
+        plt.plot(self.avg_rewards, label='Average Reward', color='blue')
         plt.xlabel('Simulation Iteration')
         plt.ylabel('Average Reward')
         plt.title('Average Reward per Simulation')
+
+        # Plot moving average of rewards if enough data points
+        if len(self.avg_rewards) >= N:
+            moving_avg = np.convolve(self.avg_rewards, np.ones(N) / N, mode='valid')
+            plt.plot(np.arange(N-1, len(self.avg_rewards)), moving_avg, label='Moving Average', color='orange')
         plt.legend()
 
-        # Plot best values
-        plt.subplot(1, 3, 2)
-        plt.plot(self.best_values, label='Best Value', color='orange')
+    
+        # Plot reward variance
+        plt.subplot(1, 2, 2)
+        plt.plot(self.reward_variances, label='Reward Variance', color='red')
         plt.xlabel('Simulation Iteration')
-        plt.ylabel('Best Value')
-        plt.title('Best Value Estimate')
+        plt.ylabel('Reward Variance')
+        plt.title('Reward Variance per Simulation')
         plt.legend()
 
-        # Plot visit counts
-        plt.subplot(1, 3, 3)
-        plt.plot(self.best_visits, label='Best Visits', color='green')
-        plt.xlabel('Simulation Iteration')
-        plt.ylabel('Visit Count')
-        plt.title('Visit Counts of Best Actions')
-        plt.legend()
+    
 
         plt.tight_layout()
+        if title is not None:
+            plt.suptitle(title)
+        if filename:
+            plt.savefig(filename)
         plt.show()
 
 # Example usage with CartPole-v1 environment
@@ -164,5 +176,5 @@ while not done:
 
 env.close()
 
-# Plot performance metrics
-mcts.plot_performance()
+# Plot performance metrics with moving average window size of 100
+mcts.plot_performance(N=100, title="MCTS Performance Metrics", filename="mcts_performance.png")
