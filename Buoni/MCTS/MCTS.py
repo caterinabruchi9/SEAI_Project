@@ -2,6 +2,7 @@ import numpy as np
 import gym
 import matplotlib.pyplot as plt
 import time
+import math
 
 class MCTSNode:
     def __init__(self, state, parent=None, action=None):
@@ -15,14 +16,19 @@ class MCTSNode:
     def is_fully_expanded(self, action_size):
         return len(self.children) == action_size
 
-    def best_child(self, c_param=1.4):
+    def best_child(self):
         if self.visits == 0:
             return np.random.choice(self.children)
-        choices_weights = [
-            (child.value / child.visits) + c_param * np.sqrt((2 * np.log(self.visits) / child.visits))
-            for child in self.children
-        ]
-        return self.children[np.argmax(choices_weights)]
+        # Simply choose the child with the highest average reward
+        best_value = float('-inf')
+        best_child = None
+        for child in self.children:
+            if child.visits > 0:
+                child_value = child.value / child.visits
+                if child_value > best_value:
+                    best_value = child_value
+                    best_child = child
+        return best_child
 
     def expand(self, action, next_state):
         child_node = MCTSNode(state=next_state, parent=self, action=action)
@@ -34,7 +40,7 @@ class MCTSNode:
         self.value += reward
 
 class MCTS:
-    def __init__(self, env, num_simulations=1000, convergence_threshold=0.01):
+    def __init__(self, env, num_simulations=1000, convergence_threshold=0.0001):
         self.env = env
         self.num_simulations = num_simulations
         self.convergence_threshold = convergence_threshold
@@ -42,17 +48,18 @@ class MCTS:
 
         # Tracking performance metrics
         self.avg_rewards = []
+        self.reward_variances = []
         self.best_values = []
         self.best_visits = []
 
     def _simulate(self, env_copy, state):
         done = False
-        total_reward = 0
+        rewards = []
         while not done:
-            action = np.random.choice(self.env.action_space.n)
-            state, reward, done, _, _ = env_copy.step(action)
-            total_reward += reward
-        return total_reward
+            action = env_copy.action_space.sample()
+            state, reward, done, _ , _ = env_copy.step(action)
+            rewards.append(reward)
+        return np.sum(rewards)
 
     def search(self, initial_state):
         self.root = MCTSNode(state=initial_state)
@@ -89,16 +96,23 @@ class MCTS:
             self._backpropagate(node, reward)
 
             # Record metrics
-            best_child = self.root.best_child(c_param=0.0)
+            best_child = self.root.best_child()
             best_value = best_child.value / best_child.visits if best_child.visits > 0 else float('-inf')
             avg_reward = reward
             self.avg_rewards.append(avg_reward)
             self.best_values.append(best_value)
             self.best_visits.append(best_child.visits if best_child.visits > 0 else 0)
 
+            # Calculate variance of rewards
+            if len(self.avg_rewards) > 1:
+                rewards_mean = np.mean(self.avg_rewards)
+                rewards_variance = np.var(self.avg_rewards)
+                self.reward_variances.append(rewards_variance)
+            else:
+                self.reward_variances.append(0.0)
+
             # Debug information
-            if i % 100 == 0:  # Print every 100 iterations
-                print(f"Iteration {i}: Best Value = {best_value}, Avg Reward = {avg_reward}")
+            print(f"Iteration {i}: Best Value = {best_value}, Avg Reward = {avg_reward}")
 
             # Check for convergence
             if abs(best_value - previous_best_value) < self.convergence_threshold:
@@ -106,57 +120,63 @@ class MCTS:
                 break
             previous_best_value = best_value
 
-        return self.root.best_child(c_param=0.0).action
+        best_action = self.root.best_child().action
+        print(f"Selected Action: {best_action}")
+        return best_action
 
     def _select_untried_action(self, node):
         tried_actions = [child.action for child in node.children]
         possible_actions = set(range(self.env.action_space.n)) - set(tried_actions)
-        return np.random.choice(list(possible_actions))
+        if possible_actions:
+            return np.random.choice(list(possible_actions))
+        else:
+            return np.random.choice(range(self.env.action_space.n))  # Choose randomly if all actions are tried
 
     def _backpropagate(self, node, reward):
         while node is not None:
             node.update(reward)
             node = node.parent
 
-    def plot_performance(self):
-        plt.figure(figsize=(12, 6))
+    def plot_performance(self, N=100, title=None, filename=""):
+        plt.figure(figsize=(12, 8))
 
         # Plot average rewards
-        plt.subplot(1, 3, 1)
-        plt.plot(self.avg_rewards, label='Average Reward')
+        plt.subplot(1, 2, 1)
+        plt.plot(self.avg_rewards, label='Average Reward', color='blue')
         plt.xlabel('Simulation Iteration')
         plt.ylabel('Average Reward')
         plt.title('Average Reward per Simulation')
+
+        # Plot moving average of rewards if enough data points
+        if len(self.avg_rewards) >= N:
+            moving_avg = np.convolve(self.avg_rewards, np.ones(N) / N, mode='valid')
+            plt.plot(np.arange(N-1, len(self.avg_rewards)), moving_avg, label='Moving Average', color='orange')
         plt.legend()
 
-        # Plot best values
-        plt.subplot(1, 3, 2)
-        plt.plot(self.best_values, label='Best Value', color='orange')
+        # Plot reward variance
+        plt.subplot(1, 2, 2)
+        plt.plot(self.reward_variances, label='Reward Variance', color='red')
         plt.xlabel('Simulation Iteration')
-        plt.ylabel('Best Value')
-        plt.title('Best Value Estimate')
-        plt.legend()
-
-        # Plot visit counts
-        plt.subplot(1, 3, 3)
-        plt.plot(self.best_visits, label='Best Visits', color='green')
-        plt.xlabel('Simulation Iteration')
-        plt.ylabel('Visit Count')
-        plt.title('Visit Counts of Best Actions')
+        plt.ylabel('Reward Variance')
+        plt.title('Reward Variance per Simulation')
         plt.legend()
 
         plt.tight_layout()
+        if title is not None:
+            plt.suptitle(title)
+        if filename:
+            plt.savefig(filename)
         plt.show()
 
 # Example usage with CartPole-v1 environment
-env = gym.make("CartPole-v1", render_mode="human")  # Set render_mode to "human"
-mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.01)
-state, _ = env.reset()
+env = gym.make("CartPole-v1")
+mcts = MCTS(env, num_simulations=10000, convergence_threshold=0.0005)
+state = env.reset()
 done = False
 
 while not done:
     action = mcts.search(state)
-    state, reward, done, _ ,_ = env.step(action)
+    state, reward, done, _, _ = env.step(action)
     env.render()  # Render after each step
     time.sleep(0.05)  # Add a small delay to visualize the movement
     if done:
@@ -164,5 +184,5 @@ while not done:
 
 env.close()
 
-# Plot performance metrics
-mcts.plot_performance()
+# Plot performance metrics with moving average window size of 100
+mcts.plot_performance(N=100, title="MCTS Performance Metrics", filename="mcts_performance.png")
