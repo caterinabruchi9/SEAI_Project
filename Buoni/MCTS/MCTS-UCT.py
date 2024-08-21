@@ -1,5 +1,5 @@
 import numpy as np
-import gymnasium as gym
+import gym
 import matplotlib.pyplot as plt
 import time
 
@@ -16,6 +16,8 @@ class MCTSNode:
         return len(self.children) == action_size
 
     def best_child(self, c_param=1.4):
+        if self.visits == 0:
+            return np.random.choice(self.children)
         choices_weights = [
             (child.value / child.visits) + c_param * np.sqrt((2 * np.log(self.visits) / child.visits))
             for child in self.children
@@ -43,14 +45,24 @@ class MCTS:
         self.best_values = []
         self.best_visits = []
 
+    def _simulate(self, env_copy, state):
+        done = False
+        total_reward = 0
+        while not done:
+            action = np.random.choice(self.env.action_space.n)
+            state, reward, done, _, _ = env_copy.step(action)
+            total_reward += reward
+        return total_reward
+
     def search(self, initial_state):
         self.root = MCTSNode(state=initial_state)
         previous_best_value = float('-inf')
 
         for i in range(self.num_simulations):
             node = self.root
-            env_copy = gym.make(self.env.spec.id)  # Create a new environment instance
-            state, _ = env_copy.reset()
+            env_copy = gym.make(self.env.spec.id)
+            state = initial_state
+            env_copy.reset()
 
             # Selection
             while node.is_fully_expanded(self.env.action_space.n) and len(node.children) > 0:
@@ -84,8 +96,13 @@ class MCTS:
             self.best_values.append(best_value)
             self.best_visits.append(best_child.visits if best_child.visits > 0 else 0)
 
+            # Debug information
+            if i % 100 == 0:  # Print every 100 iterations
+                print(f"Iteration {i}: Best Value = {best_value}, Avg Reward = {avg_reward}")
+
             # Check for convergence
             if abs(best_value - previous_best_value) < self.convergence_threshold:
+                print(f"Convergence reached with value: {best_value}")
                 break
             previous_best_value = best_value
 
@@ -95,15 +112,6 @@ class MCTS:
         tried_actions = [child.action for child in node.children]
         possible_actions = set(range(self.env.action_space.n)) - set(tried_actions)
         return np.random.choice(list(possible_actions))
-
-    def _simulate(self, env_copy, state):
-        done = False
-        total_reward = 0
-        while not done:
-            action = np.random.choice(self.env.action_space.n)
-            state, reward, done, _, _ = env_copy.step(action)
-            total_reward += reward
-        return total_reward
 
     def _backpropagate(self, node, reward):
         while node is not None:
@@ -140,15 +148,15 @@ class MCTS:
         plt.tight_layout()
         plt.show()
 
-# Example usage with MountainCar-v0 environment
-env = gym.make("MountainCar-v0", render_mode="human")  # Set render_mode to "human"
+# Example usage with CartPole-v1 environment
+env = gym.make("CartPole-v1", render_mode="human")  # Set render_mode to "human"
 mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.01)
 state, _ = env.reset()
 done = False
 
 while not done:
     action = mcts.search(state)
-    state, reward, done, _, _ = env.step(action)
+    state, reward, done, _ ,_ = env.step(action)
     env.render()  # Render after each step
     time.sleep(0.05)  # Add a small delay to visualize the movement
     if done:

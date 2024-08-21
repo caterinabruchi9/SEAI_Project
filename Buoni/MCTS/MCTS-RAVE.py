@@ -1,6 +1,7 @@
 import numpy as np
-import gymnasium as gym
+import gym
 import matplotlib.pyplot as plt
+import time
 
 class MCTSNode:
     def __init__(self, state, parent=None, action=None):
@@ -11,12 +12,20 @@ class MCTSNode:
         self.visits = 0
         self.value = 0.0
 
+        # RAVE statistics
+        self.rave_value = 0.0
+        self.rave_visits = 0
+
     def is_fully_expanded(self, action_size):
         return len(self.children) == action_size
 
-    def best_child(self, c_param=1.4):
+    def best_child(self, c_param=1.4, use_rave=False):
+        if self.visits == 0:
+            return np.random.choice(self.children)
         choices_weights = [
             (child.value / child.visits) + c_param * np.sqrt((2 * np.log(self.visits) / child.visits))
+            if not use_rave else
+            (child.rave_value / child.rave_visits) + c_param * np.sqrt((2 * np.log(self.visits) / child.rave_visits))
             for child in self.children
         ]
         return self.children[np.argmax(choices_weights)]
@@ -30,17 +39,36 @@ class MCTSNode:
         self.visits += 1
         self.value += reward
 
+    def update_rave(self, reward):
+        if self.rave_visits == 0:
+            self.rave_value = reward
+        else:
+            self.rave_value = (self.rave_value * self.rave_visits + reward) / (self.rave_visits + 1)
+        self.rave_visits += 1
+
 class MCTS:
-    def __init__(self, env, num_simulations=1000, convergence_threshold=0.01):
+    def __init__(self, env, num_simulations=1000, convergence_threshold=0.01, c_rave=1.0):
         self.env = env
         self.num_simulations = num_simulations
         self.convergence_threshold = convergence_threshold
         self.root = None
 
+        # RAVE parameter
+        self.c_rave = c_rave
+
         # Tracking performance metrics
         self.avg_rewards = []
         self.best_values = []
         self.best_visits = []
+
+    def _simulate(self, env_copy, state):
+        done = False
+        total_reward = 0
+        while not done:
+            action = np.random.choice(self.env.action_space.n)
+            state, reward, done, _, _ = env_copy.step(action)
+            total_reward += reward
+        return total_reward
 
     def search(self, initial_state):
         self.root = MCTSNode(state=initial_state)
@@ -48,34 +76,40 @@ class MCTS:
 
         for i in range(self.num_simulations):
             node = self.root
-            env_copy = gym.make(self.env.spec.id, render_mode="human")  # Create a new environment instance
+            env_copy = gym.make(self.env.spec.id)
             state = initial_state
-            env_copy.reset()  # Reset the environment at the start of each simulation
+            env_copy.reset()
 
             # Selection
             while node.is_fully_expanded(self.env.action_space.n) and len(node.children) > 0:
-                node = node.best_child()
-                if node is None:  # Add this check to debug
+                node = node.best_child(use_rave=True)
+                action = node.action
+                state, _, done, _, _ = env_copy.step(action)
+                if done:
                     break
 
             # Expansion
             if not node.is_fully_expanded(self.env.action_space.n):
                 action = self._select_untried_action(node)
                 next_state, reward, done, _, _ = env_copy.step(action)
+                node = node.expand(action, next_state)
+
                 if done:
                     node.update(reward)
+                    node.update_rave(reward)
                     continue
-                node = node.expand(action, next_state)
 
             # Simulation
             reward = self._simulate(env_copy, node.state)
-            print(f"Simulation reward: {reward}")  # Debug print
 
             # Backpropagation
             self._backpropagate(node, reward)
 
+            # Update RAVE statistics
+            self._update_rave(node, reward)
+
             # Record metrics
-            best_child = self.root.best_child(c_param=0.0)
+            best_child = self.root.best_child(c_param=0.0, use_rave=True)
             best_value = best_child.value / best_child.visits if best_child.visits > 0 else float('-inf')
             avg_reward = reward
             self.avg_rewards.append(avg_reward)
@@ -92,29 +126,22 @@ class MCTS:
                 break
             previous_best_value = best_value
 
-        # Return the best action from the root node
-        return self.root.best_child(c_param=0.0).action
+        return self.root.best_child(c_param=0.0, use_rave=True).action
 
     def _select_untried_action(self, node):
         tried_actions = [child.action for child in node.children]
         possible_actions = set(range(self.env.action_space.n)) - set(tried_actions)
-        action = np.random.choice(list(possible_actions))
-        print(f"Selected untried action: {action}")  # Debug print
-        return action
-
-    def _simulate(self, env_copy, state):
-        done = False
-        total_reward = 0
-        while not done:
-            action = np.random.choice(self.env.action_space.n)
-            state, reward, done, _, _ = env_copy.step(action)
-            total_reward += reward
-            print(f"Simulated action: {action}, Reward: {reward}")  # Debug print
-        return total_reward
+        return np.random.choice(list(possible_actions))
 
     def _backpropagate(self, node, reward):
         while node is not None:
             node.update(reward)
+            node = node.parent
+
+    def _update_rave(self, node, reward):
+        while node is not None:
+            if node.parent is not None:
+                node.update_rave(reward)
             node = node.parent
 
     def plot_performance(self):
@@ -147,16 +174,17 @@ class MCTS:
         plt.tight_layout()
         plt.show()
 
-# Example usage with FrozenLake-v1 environment
-env = gym.make("FrozenLake-v1", is_slippery=True, render_mode="human")
-mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.01)
-state, _ = env.reset()
+# Example usage with CartPole-v1 environment
+env = gym.make("CartPole-v1", render_mode="human")  # Ensure environment is registered
+mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.01, c_rave=1.0)
+state = env.reset()
 done = False
 
 while not done:
     action = mcts.search(state)
     state, reward, done, _, _ = env.step(action)
-    env.render()
+    env.render()  # Render after each step
+    time.sleep(0.05)  # Add a small delay to visualize the movement
     if done:
         print(f"Finished with reward: {reward}")
 
