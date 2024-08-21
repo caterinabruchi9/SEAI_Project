@@ -49,7 +49,7 @@ class MC_offpolicy:
             # Debug information
             print(f"Update: State: {state}, Action: {action}, Reward: {reward}, G: {G}, W: {W}, Old Value: {old_value}, New Value: {self.Q[str(state)][action]}")
 
-    import time
+    
 
     def simulate(self, render=False, train=True, verbose=True):
         b_rewards = []

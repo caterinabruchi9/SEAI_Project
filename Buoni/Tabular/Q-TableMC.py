@@ -105,7 +105,7 @@ class tabular_agent(ABC):
                     self.update_epsilon()
                     self.score.append(episode_score)
 
-    def plot_learning(self, N, title=None, filename=""):
+    def plot_learning(self, N, title=None, filename="Q-Table/"):
         plt.figure(figsize=(10, 5))
         plt.plot(self.score, label="Score per Episode")
         
@@ -126,7 +126,6 @@ class tabular_agent(ABC):
         plt.savefig(self.env_name + filename)
         plt.show()
 
-
     def save_model(self, path):
         np.save(path, self.table)
 
@@ -146,9 +145,21 @@ class tabular_agent(ABC):
 
         env.close()
 
+    def run_experiment(self, plot_N=100, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None):
+        # Run learning
+        self.learn()
+        
+        # Plot the learning curve
+        self.plot_learning(N=plot_N, title=plot_title, filename=plot_filename)
+        
+        # Save the model if path is provided
+        if model_path:
+            self.save_model(model_path)
+        
+        # Simulate
+        self.simulate()
+
 if __name__ == '__main__':
     chosen = "every-visit"
-    agent = tabular_agent(env='CartPole-v1', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=True)
-    agent.learn()
-    agent.plot_learning(N=100, title="Learning Curve", filename=chosen + "_learning_curve.png")
-    agent.simulate()
+    agent = tabular_agent(env='MountainCar-v0', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=True)
+    agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy")

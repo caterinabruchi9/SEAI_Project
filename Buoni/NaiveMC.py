@@ -13,7 +13,7 @@ class NaiveMonteCarlo:
         total_reward = 0
         done = False
 
-        # Apply the action
+        # Apply the initial action
         state, reward, done, _, _ = env_copy.step(action)
         total_reward += reward
 
@@ -24,6 +24,7 @@ class NaiveMonteCarlo:
             total_reward += reward
         
         return total_reward
+
 
     def search(self):
         action_values = np.zeros(self.env.action_space.n)
