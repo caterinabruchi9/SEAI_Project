@@ -6,8 +6,8 @@ import numpy as np
 
 # Definizione della rete neurale per la politica
 class PolicyNetwork(nn.Module):
-    def _init_(self, state_dim, action_dim):
-        super(PolicyNetwork, self)._init_()
+    def __init__(self, state_dim, action_dim):
+        super(PolicyNetwork, self).__init__()
         self.fc1 = nn.Linear(state_dim, 24)
         self.fc2 = nn.Linear(24, 24)
         self.fc3 = nn.Linear(24, action_dim)
@@ -26,7 +26,7 @@ def compute_returns(rewards, gamma):
         returns.insert(0, R)
     return returns
 
-def monte_carlo_policy_gradient(env_name='CartPole-v1', num_episodes=1000, gamma=0.99, lr=0.01):
+def monte_carlo_policy_gradient(env_name='MountainCar-v0', num_episodes=1000, gamma=0.99, lr=0.01, render=False):
     env = gym.make(env_name)
     state_dim = env.observation_space.shape[0]
     action_dim = env.action_space.n
@@ -36,10 +36,18 @@ def monte_carlo_policy_gradient(env_name='CartPole-v1', num_episodes=1000, gamma
     
     for episode in range(num_episodes):
         state = env.reset()
+
+        # Handle case where reset() returns a tuple
+        if isinstance(state, tuple):
+            state = state[0]
+
         done = False
         states, actions, rewards = [], [], []
         
         while not done:
+            if render:
+                env.render()  # Add rendering to visualize the environment
+
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
             action_probs = policy_net(state_tensor)
             action = np.random.choice(action_dim, p=action_probs.detach().numpy().flatten())
@@ -51,6 +59,10 @@ def monte_carlo_policy_gradient(env_name='CartPole-v1', num_episodes=1000, gamma
             rewards.append(reward)
             
             state = next_state
+
+            # Handle case where step() returns a tuple
+            if isinstance(state, tuple):
+                state = state[0]
         
         # Compute returns
         returns = compute_returns(rewards, gamma)
@@ -79,5 +91,5 @@ def monte_carlo_policy_gradient(env_name='CartPole-v1', num_episodes=1000, gamma
 
     env.close()
 
-# Esegui l'algoritmo su CartPole-v1
-monte_carlo_policy_gradient()
+# Esegui l'algoritmo su MountainCar-v0 con rendering abilitato
+monte_carlo_policy_gradient(render=True)
