@@ -4,7 +4,6 @@ import gym
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import time
-import copy  # Import the copy module to duplicate the environment
 
 def random_policy(nA):
     def policy_fn(observation):
@@ -23,7 +22,7 @@ def epsilon_greedy_policy(Q, epsilon=0.1):
     return policy_fn
 
 class MC_offpolicy:
-    def __init__(self, env, num_episodes, discount_factor=0.99, epsilon=0.1):
+    def __init__(self, env, num_episodes, discount_factor=0.99, epsilon=0.05):
         self.env = env
         self.num_episodes = num_episodes
         self.discount_factor = discount_factor
@@ -32,20 +31,37 @@ class MC_offpolicy:
         self.C = defaultdict(lambda: np.zeros(self.env.action_space.n))
         self.behavior_policy = random_policy(self.env.action_space.n)
         self.target_policy = epsilon_greedy_policy(self.Q, epsilon=self.epsilon)
+        
+        # Clamping parameters
+        self.max_q_value = 1e10
+        self.min_q_value = -1e10
+        self.epsilon_clamp = 1e-10
 
     def update(self, episode):
         G = 0.0
         W = 1.0
+        
         for t in range(len(episode))[::-1]:
             state, action, reward = episode[t]
             G = self.discount_factor * G + reward
             self.C[str(state)][action] += 1
+            
             old_value = self.Q[str(state)][action]
-            self.Q[str(state)][action] += (W / (self.C[str(state)][action] + 1e-60)) * (G - old_value)
+            
+            
+            weight = min(max(W, self.epsilon_clamp), 1e10)
+            update_value = (weight / (self.C[str(state)][action] + self.epsilon_clamp)) * (G - old_value)
+            
+            
+            new_value = old_value + update_value
+            new_value = np.clip(new_value, self.min_q_value, self.max_q_value)
+            self.Q[str(state)][action] = new_value
+            
+            
             if action == np.argmax(self.target_policy(state)):
-                W *= (1.0 - self.epsilon) / self.epsilon
+                W *= (1.0 - self.epsilon) / max(self.epsilon, self.epsilon_clamp)
             else:
-                W *= self.epsilon / self.epsilon
+                W *= self.epsilon / max(self.epsilon, self.epsilon_clamp)
 
     def train(self, verbose=True):
         b_rewards = []
@@ -168,8 +184,9 @@ class MC_offpolicy:
 
 # Example usage
 env = gym.make("CliffWalking-v0")  
-rl = MC_offpolicy(env, num_episodes=1000, epsilon=0.1)
+rl = MC_offpolicy(env, num_episodes=500, epsilon=0.05)
 Q = rl.train(verbose=False)
 
 # Render the final learned policy using Q-values
-rl.render_policy(Q, episodes=10)
+rl.render_policy(Q, episodes=100)
+

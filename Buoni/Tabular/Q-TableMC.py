@@ -181,5 +181,5 @@ class tabular_agent(ABC):
 
 if __name__ == '__main__':
     chosen = "first-visit"
-    agent = tabular_agent(env='CliffWalking-v0', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=False)
+    agent = tabular_agent(env='FrozenLake-v1', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=False)
     agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy", policy_filename=chosen + "_policy.png")

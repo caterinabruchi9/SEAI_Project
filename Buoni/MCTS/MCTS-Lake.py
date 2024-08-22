@@ -169,7 +169,7 @@ class MCTS:
 
 # Example usage with FrozenLake-v1 environment
 env = gym.make("FrozenLake-v1", render_mode="human")  # Set render_mode to "human"
-mcts = MCTS(env, num_simulations=10000, convergence_threshold=0.0005)
+mcts = MCTS(env, num_simulations=100, convergence_threshold=0.0005)
 
 num_episodes = 1000  # Number of episodes to run
 for episode in range(num_episodes):
