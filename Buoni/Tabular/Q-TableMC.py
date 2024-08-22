@@ -1,10 +1,9 @@
 import gym
 import numpy as np
 import random
-import math
+import matplotlib.pyplot as plt
 from abc import ABC
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 class tabular_agent(ABC):
 
@@ -21,32 +20,14 @@ class tabular_agent(ABC):
 
         self.action_space = self.env.action_space
         self.action_size = self.env.action_space.n
-        
-        # Discretization parameters
-        self.buckets = (1, 1, 6, 12)  # Number of buckets for each state variable
-        self.state_size = np.prod(self.buckets)
 
-        # Q-table initialized to zeros
-        self.table = np.zeros(self.buckets + (self.action_size,))
+        # Q-table initialized to zeros (16x4 for CliffWalking-v0, as it has 16 states and 4 actions)
+        self.table = np.zeros((self.env.observation_space.n, self.action_size))
         self.score = []
 
         # To store returns for each state-action pair
         self.returns_sum = {}
         self.returns_count = {}
-
-        # Discretization bounds
-        self.state_bounds = list(zip(self.env.observation_space.low, self.env.observation_space.high))
-        self.state_bounds[1] = [-0.5, 0.5]
-        self.state_bounds[3] = [-math.radians(50), math.radians(50)]
-
-    def discretize_state(self, state):
-        discretized = []
-        for i in range(len(state)):
-            scaling = (state[i] - self.state_bounds[i][0]) / (self.state_bounds[i][1] - self.state_bounds[i][0])
-            new_obs = int(round((self.buckets[i] - 1) * scaling))
-            new_obs = min(self.buckets[i] - 1, max(0, new_obs))
-            discretized.append(new_obs)
-        return tuple(discretized)
 
     def update_epsilon(self):
         if self.epsilon > self.epsilon_min:
@@ -76,13 +57,11 @@ class tabular_agent(ABC):
     def select_action(self, state):
         if random.random() <= self.epsilon:
             return self.action_space.sample()
-        discretized_state = self.discretize_state(state)
-        return np.argmax(self.table[discretized_state])
+        return np.argmax(self.table[state])
 
     def learn(self):
         for e in tqdm(np.arange(self.episodes), desc="Learning"):
             state, _ = self.env.reset()
-            discretized_state = self.discretize_state(state)
             episode_score = 0
             done = False
             episode = []
@@ -93,12 +72,10 @@ class tabular_agent(ABC):
 
                 action = self.select_action(state)
                 next_state, reward, done, _, _ = self.env.step(action)
-                discretized_next_state = self.discretize_state(next_state)
 
                 episode_score += reward
-                episode.append((discretized_state, action, reward))
+                episode.append((state, action, reward))
                 state = next_state
-                discretized_state = discretized_next_state
 
                 if done:
                     self.update_table(episode)
@@ -126,6 +103,40 @@ class tabular_agent(ABC):
         plt.savefig(self.env_name + filename)
         plt.show()
 
+    def plot_policy(self, filename="policy.png"):
+        # Define the grid size for CliffWalking-v0 (4 rows x 12 columns)
+        grid_height = 4
+        grid_width = 12
+        
+        # Create a grid for the policy
+        policy_grid = np.zeros((grid_height, grid_width), dtype=int)
+
+        # Populate the policy grid with the action that has the highest Q-value
+        for state in range(grid_height * grid_width):
+            action = np.argmax(self.table[state])
+            policy_grid[state // grid_width, state % grid_width] = action
+        
+        # Create a plot for the policy
+        plt.figure(figsize=(10, 5))
+        plt.imshow(policy_grid, cmap='viridis', interpolation='nearest')
+        plt.colorbar(label='Action')
+        plt.title('Learned Policy')
+        plt.xlabel('Column')
+        plt.ylabel('Row')
+
+        # Map actions to colors
+        action_labels = ['Left', 'Down', 'Right', 'Up']
+        plt.xticks(ticks=np.arange(grid_width), labels=np.arange(grid_width))
+        plt.yticks(ticks=np.arange(grid_height), labels=np.arange(grid_height))
+
+        # Overlay action labels
+        for i in range(grid_height):
+            for j in range(grid_width):
+                plt.text(j, i, action_labels[policy_grid[i, j]], ha='center', va='center', color='white')
+
+        plt.savefig(filename)
+        plt.show()
+
     def save_model(self, path):
         np.save(path, self.table)
 
@@ -133,33 +144,42 @@ class tabular_agent(ABC):
         self.table = np.load(path)
 
     def simulate(self):
-        env = gym.make(self.env_name, render_mode="human")
-        self.epsilon = -1
-        done = False
+        env = gym.make(self.env_name, render_mode="human")  # Use 'human' for interactive rendering
+        self.epsilon = -1  # Disable exploration for policy demonstration
         state, _ = env.reset()
+        done = False
+        
         while not done:
-            env.render()
-            action = self.select_action(state)
+            action = np.argmax(self.table[state])  # Select the best action
             next_state, reward, done, _, _ = env.step(action)
+            
             state = next_state
 
-        env.close()
+            # Stop rendering if the terminal state (goal) is reached
+            if done:
+                env.render()  # Render the final state
 
-    def run_experiment(self, plot_N=100, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None):
+       
+
+
+    def run_experiment(self, plot_N=100, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None, policy_filename="policy.png"):
         # Run learning
         self.learn()
         
         # Plot the learning curve
         self.plot_learning(N=plot_N, title=plot_title, filename=plot_filename)
         
+        # Plot the learned policy
+        self.plot_policy(filename=policy_filename)
+        
         # Save the model if path is provided
         if model_path:
             self.save_model(model_path)
         
-        # Simulate
+        # Simulate and render the final solution
         self.simulate()
 
 if __name__ == '__main__':
-    chosen = "every-visit"
-    agent = tabular_agent(env='MountainCar-v0', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=True)
-    agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy")
+    chosen = "first-visit"
+    agent = tabular_agent(env='CliffWalking-v0', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=False)
+    agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy", policy_filename=chosen + "_policy.png")

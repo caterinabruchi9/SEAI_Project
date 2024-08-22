@@ -170,7 +170,7 @@ class MCTS:
 
 # Example usage with CartPole-v1 environment
 env = gym.make("CartPole-v1")
-mcts = MCTS(env, num_simulations=10000, convergence_threshold=0.0005)
+mcts = MCTS(env, num_simulations=1000, convergence_threshold=0.05)
 state = env.reset()
 done = False
 

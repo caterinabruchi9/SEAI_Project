@@ -2,154 +2,174 @@ import sys
 import numpy as np
 import gym
 from collections import defaultdict
-import pickle
 import matplotlib.pyplot as plt
 import time
+import copy  # Import the copy module to duplicate the environment
 
 def random_policy(nA):
     def policy_fn(observation):
         return np.ones(nA, dtype=float) / nA
     return policy_fn
 
-def epsilon_greedy_policy(Q):
+def epsilon_greedy_policy(Q, epsilon=0.1):
     def policy_fn(state):
         nA = len(Q[str(state)])
-        A = np.ones(nA, dtype=float) * 0.05 / (nA - 1)
+        A = np.ones(nA, dtype=float) * epsilon / (nA - 1)
         best_action = np.argmax(Q[str(state)])
-        A[best_action] = 0.85
+        A[best_action] = 1.0 - epsilon
         # Ensure probabilities sum to 1
         A /= A.sum()
         return A
     return policy_fn
 
 class MC_offpolicy:
-    def __init__(self, env, num_episodes, discount_factor=0.99):
+    def __init__(self, env, num_episodes, discount_factor=0.99, epsilon=0.1):
         self.env = env
         self.num_episodes = num_episodes
         self.discount_factor = discount_factor
+        self.epsilon = epsilon
         self.Q = defaultdict(lambda: np.zeros(self.env.action_space.n))
         self.C = defaultdict(lambda: np.zeros(self.env.action_space.n))
         self.behavior_policy = random_policy(self.env.action_space.n)
-        self.target_policy = epsilon_greedy_policy(self.Q)
+        self.target_policy = epsilon_greedy_policy(self.Q, epsilon=self.epsilon)
 
     def update(self, episode):
         G = 0.0
         W = 1.0
         for t in range(len(episode))[::-1]:
             state, action, reward = episode[t]
-            
             G = self.discount_factor * G + reward
             self.C[str(state)][action] += 1
             old_value = self.Q[str(state)][action]
             self.Q[str(state)][action] += (W / (self.C[str(state)][action] + 1e-60)) * (G - old_value)
             if action == np.argmax(self.target_policy(state)):
-                W *= 0.85 / 0.05
+                W *= (1.0 - self.epsilon) / self.epsilon
             else:
-                W *= 0.05 / 0.05
-            # Debug information
-            print(f"Update: State: {state}, Action: {action}, Reward: {reward}, G: {G}, W: {W}, Old Value: {old_value}, New Value: {self.Q[str(state)][action]}")
+                W *= self.epsilon / self.epsilon
 
-    
-
-    def simulate(self, render=False, train=True, verbose=True):
+    def train(self, verbose=True):
         b_rewards = []
         t_rewards = []
         episode_length = []
         mean_rewards = []
-        max_totalReward = 0
+        max_totalReward = -float('inf')
 
-        if train:
-            for trial in range(1, self.num_episodes + 1):
-                if trial % 1000 == 0:
-                    print(f"\rEpisode {trial}/{self.num_episodes}.", end="")
-                    sys.stdout.flush()
-                
-                episode = []
-                state = self.env.reset()
-                done = False
-                step = 0
-                while not done:
-                    probs = self.behavior_policy(state)
-                    if not np.isclose(np.sum(probs), 1.0):
-                        raise ValueError(f"Behavior policy probabilities do not sum to 1: {probs}")
-                    action = np.random.choice(np.arange(len(probs)), p=probs)
-                    next_state, reward, done, _ , _ = self.env.step(action)
-                    episode.append((state, action, reward))
-                    state = next_state
-                    step += 1
-                    # Debug information
-                    if verbose and step % 100 == 0:
-                        print(f"Episode {trial}, Step {step}: State: {state}, Action: {action}, Reward: {reward}")
+        for trial in range(1, self.num_episodes + 1):
+            if trial % 100 == 0:
+                print(f"\rEpisode {trial}/{self.num_episodes}.", end="")
+                sys.stdout.flush()
+            
+            episode = []
+            state = self.env.reset()
+            done = False
+            step = 0
+            while not done:
+                probs = self.behavior_policy(state)
+                if not np.isclose(np.sum(probs), 1.0):
+                    raise ValueError(f"Behavior policy probabilities do not sum to 1: {probs}")
+                action = np.random.choice(np.arange(len(probs)), p=probs)
+                next_state, reward, done, _, _ = self.env.step(action)
+                episode.append((state, action, reward))
+                state = next_state
+                step += 1
 
-                self.update(episode)
-                total_reward = sum([reward for _, _, reward in episode])
-                b_rewards.append(total_reward)
+            self.update(episode)
+            total_reward = sum([reward for _, _, reward in episode])
+            b_rewards.append(total_reward)
 
-                state = self.env.reset()
-                total_reward = 0
-                iteration = 0
-                done = False
-                while not done:
-                    probs = self.target_policy(state)
-                    if not np.isclose(np.sum(probs), 1.0):
-                        raise ValueError(f"Target policy probabilities do not sum to 1: {probs}")
-                    action = np.random.choice(np.arange(len(probs)), p=probs)
-                    next_state, reward, done, _ , _ = self.env.step(action)
-
-                    if render:
-                        self.env.render()  # Call render without checking return value
-                        time.sleep(0.05)  # Add a slight delay to make rendering visible
-
-                    total_reward += reward
-                    state = next_state
-                    iteration += 1
-                    # Debug information
-                    if verbose and iteration % 100 == 0:
-                        print(f"Trial {trial}, Target Policy Step {iteration}: State: {state}, Action: {action}, Reward: {reward}")
-
-                    if done:
-                        break
-                
-                episode_length.append(iteration)
-                t_rewards.append(total_reward)
-                mean_rewards.append(np.mean(t_rewards[-100:]))  # Average reward over last 100 episodes
-                
-                if verbose and trial % 20 == 0:
-                    print(f'\n---- Trial {trial} ----')
-                    print(f'Mean(last 10 total rewards): {np.mean(t_rewards[-10:])}')
-                
-                mean_totalReward = np.mean(t_rewards[-10:])
-                if mean_totalReward > max_totalReward and train:
-                   
-                    max_totalReward = mean_totalReward
-                    print(f'The weights are saved with total rewards: {mean_totalReward}')
+            episode_length.append(len(episode))
+            t_rewards.append(total_reward)
+            mean_rewards.append(np.mean(t_rewards[-100:]))
+            
+            if verbose and trial % 20 == 0:
+                print(f'\n---- Trial {trial} ----')
+                print(f'Mean(last 10 total rewards): {np.mean(t_rewards[-10:])}')
+            
+            mean_totalReward = np.mean(t_rewards[-10:])
+            if mean_totalReward > max_totalReward:
+                max_totalReward = mean_totalReward
+                print(f'The weights are saved with total rewards: {mean_totalReward}')
         
         print(f'Trial {trial} Total Reward: {t_rewards[-1]}')
-
+        self.env.close()
+        
         # Plot performance analysis
-        plt.figure(figsize=(12, 6))
-        plt.subplot(1, 2, 1)
-        plt.plot(t_rewards, label='Total Reward')
-        plt.xlabel('Episode')
-        plt.ylabel('Total Reward')
-        plt.title('Total Reward per Episode')
-        plt.legend()
-
-        plt.subplot(1, 2, 2)
+        plt.figure(figsize=(10, 5))
+        plt.plot(t_rewards, label='Total Reward', color='blue')
         plt.plot(mean_rewards, label='Mean Reward (last 100 episodes)', color='orange')
         plt.xlabel('Episode')
-        plt.ylabel('Mean Reward')
-        plt.title('Mean Reward (last 100 episodes)')
+        plt.ylabel('Reward')
+        plt.title('Total Reward and Mean Reward (last 100 episodes)')
         plt.legend()
-
         plt.tight_layout()
-        
         plt.show()
 
-        return self.Q, self.target_policy
+        # Plot policy grid
+        self.plot_policy_grid()
+        
+        # Return the final policy as well
+        return self.Q
 
- 
+    def plot_policy_grid(self):
+        # Define the grid size for CliffWalking-v0 (4 rows x 12 columns)
+        grid_height = 4
+        grid_width = 12
+        
+        # Create a grid for the policy
+        policy_grid = np.zeros((grid_height, grid_width), dtype=int)
+
+        # Populate the policy grid with the action that has the highest Q-value
+        for state in range(grid_height * grid_width):
+            action = np.argmax(self.Q[str(state)])
+            policy_grid[state // grid_width, state % grid_width] = action
+
+        # Create a plot for the policy
+        plt.figure(figsize=(10, 5))
+        plt.imshow(policy_grid, cmap='viridis', interpolation='nearest')
+        plt.colorbar(label='Action')
+        plt.title('Learned Policy Grid')
+        plt.xlabel('Column')
+        plt.ylabel('Row')
+
+        # Map actions to colors
+        action_labels = ['Left', 'Down', 'Right', 'Up']
+        plt.xticks(ticks=np.arange(grid_width), labels=np.arange(grid_width))
+        plt.yticks(ticks=np.arange(grid_height), labels=np.arange(grid_height))
+
+        # Overlay action labels
+        for i in range(grid_height):
+            for j in range(grid_width):
+                plt.text(j, i, action_labels[policy_grid[i, j]], ha='center', va='center', color='white')
+
+        plt.tight_layout()
+        plt.show()
+
+    def render_policy(self, Q, episodes=10):
+        print(f'Rendering {episodes} episodes using the learned policy')
+        
+        # Create a copy of the environment for rendering
+        env_copy = gym.make("CliffWalking-v0", render_mode="human")
+        state = env_copy.reset()
+        total_rewards = []
+        for _ in range(episodes):
+            done = False
+            episode_reward = 0
+            while not done:
+                # Choose action based on Q-values
+                action = np.argmax(Q[str(state)])
+                state, reward, done, _, _ = env_copy.step(action)
+                episode_reward += reward
+                env_copy.render()  # Render the environment
+                time.sleep(0.1)  # Delay to make rendering visible
+            total_rewards.append(episode_reward)
+            state = env_copy.reset()
+        print(f'Average reward over {episodes} episodes: {np.mean(total_rewards)}')
+        env_copy.close()
+
 # Example usage
-env = gym.make("CartPole-v1", render_mode="human") 
-rl = MC_offpolicy(env, num_episodes=1000)
-Q, target_policy = rl.simulate(render=True, train=True, verbose=True)
+env = gym.make("CliffWalking-v0")  
+rl = MC_offpolicy(env, num_episodes=1000, epsilon=0.1)
+Q = rl.train(verbose=False)
+
+# Render the final learned policy using Q-values
+rl.render_policy(Q, episodes=10)
