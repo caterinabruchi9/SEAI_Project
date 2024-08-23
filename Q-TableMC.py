@@ -82,7 +82,7 @@ class tabular_agent(ABC):
                     self.update_epsilon()
                     self.score.append(episode_score)
 
-    def plot_learning(self, N, title=None, filename="Q-Table/"):
+    def plot_learning(self, N, title=None, filename=""):
         plt.figure(figsize=(10, 5))
         plt.plot(self.score, label="Score per Episode")
         
@@ -144,7 +144,7 @@ class tabular_agent(ABC):
         self.table = np.load(path)
 
     def simulate(self):
-        env = gym.make(self.env_name, render_mode="human", isSlippery=False)  # Use 'human' for interactive rendering
+        env = gym.make(self.env_name, render_mode="human", is_slippery=False)  # Use 'human' for interactive rendering
         self.epsilon = -1  # Disable exploration for policy demonstration
         state, _ = env.reset()
         done = False
@@ -158,8 +158,10 @@ class tabular_agent(ABC):
             # Stop rendering if the terminal state (goal) is reached
             if done:
                 env.render()  # Render the final state
+            
+    
 
-    def run_experiment(self, plot_N=100, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None, policy_filename="policy.png"):
+    def run_experiment(self, plot_N=10, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None, policy_filename="policy.png"):
         # Run learning
         self.learn()
         
@@ -175,8 +177,9 @@ class tabular_agent(ABC):
         
         # Simulate and render the final solution
         self.simulate()
+        self.env.close()
 
 if __name__ == '__main__':
-    chosen = "first-visit"
+    chosen = "every-visit"
     agent = tabular_agent(env='FrozenLake-v1', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=50000, gamma=0.99, strategy=chosen, render_during_learning=False)
     agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy", policy_filename=chosen + "_policy.png")
