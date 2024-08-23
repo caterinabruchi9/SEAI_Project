@@ -7,26 +7,38 @@ import gymnasium as gym
 class PolicyNetwork(nn.Module):
     def __init__(self):
         super(PolicyNetwork, self).__init__()
+        """
+        self.fc1 = nn.Linear(4, 128)
+        self.fc2 = nn.Linear(128, 2)
+        """
+        #Praticmente funge anche da input
         self.fc1 = nn.Linear(4, 128)
         self.fc2 = nn.Linear(128, 2)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.softmax(self.fc2(x), dim=-1)
+        # x = torch.relu(self.fc2(x))
         return x
 
 def generate_episode(env, policy, epsilon=0.1, render=False):
     states, actions, rewards = [], [], []
-    state = env.reset()  # Assumi che il reset restituisca solo lo stato iniziale
-    if isinstance(state, tuple):  # Verifica se lo stato è una tupla e estrai solo il componente numerico necessario
+    # stato inizile
+    state = env.reset()  #res qui
+    #Per sicurezza fa un check su cosa viene restituito dallo stato, se tupla toglie cose
+    if isinstance(state, tuple):
         state = state[0] if isinstance(state[0], np.ndarray) else np.array(state[0])
 
     done = False
     while not done:
+        # abilita l'interfaccia del palo
         if render:
             env.render()
+        #Qua si va a fare un check sulla scelta exploration vs exploitation
+        # se entra nell'if sceglie a caso -> exploration
         if torch.rand(1).item() < epsilon:
             action = env.action_space.sample()
+        #Altrimenti scelgie l'azione con max reward tra quelle che conosce gia
         else:
             state_tensor = torch.from_numpy(state).float().unsqueeze(0)
             action_probs = policy(state_tensor)
