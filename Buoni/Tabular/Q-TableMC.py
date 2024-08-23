@@ -21,7 +21,7 @@ class tabular_agent(ABC):
         self.action_space = self.env.action_space
         self.action_size = self.env.action_space.n
 
-        # Q-table initialized to zeros (16x4 for CliffWalking-v0, as it has 16 states and 4 actions)
+        # Initialize Q-table to zeros
         self.table = np.zeros((self.env.observation_space.n, self.action_size))
         self.score = []
 
@@ -104,9 +104,9 @@ class tabular_agent(ABC):
         plt.show()
 
     def plot_policy(self, filename="policy.png"):
-        # Define the grid size for CliffWalking-v0 (4 rows x 12 columns)
+        # Define the grid size for FrozenLake-v1 (4 rows x 4 columns)
         grid_height = 4
-        grid_width = 12
+        grid_width = 4
         
         # Create a grid for the policy
         policy_grid = np.zeros((grid_height, grid_width), dtype=int)
@@ -117,7 +117,7 @@ class tabular_agent(ABC):
             policy_grid[state // grid_width, state % grid_width] = action
         
         # Create a plot for the policy
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(6, 6))
         plt.imshow(policy_grid, cmap='viridis', interpolation='nearest')
         plt.colorbar(label='Action')
         plt.title('Learned Policy')
@@ -144,7 +144,7 @@ class tabular_agent(ABC):
         self.table = np.load(path)
 
     def simulate(self):
-        env = gym.make(self.env_name, render_mode="human")  # Use 'human' for interactive rendering
+        env = gym.make(self.env_name, render_mode="human", isSlippery=False)  # Use 'human' for interactive rendering
         self.epsilon = -1  # Disable exploration for policy demonstration
         state, _ = env.reset()
         done = False
@@ -158,9 +158,6 @@ class tabular_agent(ABC):
             # Stop rendering if the terminal state (goal) is reached
             if done:
                 env.render()  # Render the final state
-
-       
-
 
     def run_experiment(self, plot_N=100, plot_title="Learning Curve", plot_filename="_learning_curve.png", model_path=None, policy_filename="policy.png"):
         # Run learning
@@ -181,5 +178,5 @@ class tabular_agent(ABC):
 
 if __name__ == '__main__':
     chosen = "first-visit"
-    agent = tabular_agent(env='FrozenLake-v1', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=5000, gamma=0.99, strategy=chosen, render_during_learning=False)
+    agent = tabular_agent(env='FrozenLake-v1', epsilon_start=1.0, epsilon_decay=0.995, epsilon_min=0.01, episodes=50000, gamma=0.99, strategy=chosen, render_during_learning=False)
     agent.run_experiment(plot_N=100, plot_title="Learning Curve", plot_filename=chosen + "_learning_curve.png", model_path=chosen + "_q_table.npy", policy_filename=chosen + "_policy.png")
