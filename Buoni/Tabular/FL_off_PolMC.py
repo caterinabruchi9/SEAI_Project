@@ -109,6 +109,7 @@ class MC_offpolicy:
 
     def render_policy(self):
         new_env = gym.make("FrozenLake-v1", render_mode="human")
+        # self.epsilon =-1
         state = new_env.reset()
         if isinstance(state, dict):
             state = state['observation']
