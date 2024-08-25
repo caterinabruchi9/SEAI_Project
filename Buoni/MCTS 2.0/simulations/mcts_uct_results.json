@@ -1,0 +1,208 @@
+[
+    {
+        "exploration_constant": 0.5,
+        "steps": 1000,
+        "tree_size": 710,
+        "max_depth": 5,
+        "avg_depth": 4.469014084507042,
+        "max_reward": 0.25,
+        "avg_reward": 0.0022946587240095847,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            9
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 1000,
+        "tree_size": 712,
+        "max_depth": 6,
+        "avg_depth": 4.480337078651686,
+        "max_reward": 1.0,
+        "avg_reward": 0.006672590335956672,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 1000,
+        "tree_size": 707,
+        "max_depth": 6,
+        "avg_depth": 4.469589816124469,
+        "max_reward": 1.0,
+        "avg_reward": 0.006136589775556378,
+        "policy_path": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "max_reward": 0.5,
+        "avg_reward": 0.0054927404259624635,
+        "policy_path": [
+            0,
+            4,
+            8,
+            8,
+            9,
+            13
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 5000,
+        "tree_size": 1428,
+        "max_depth": 9,
+        "avg_depth": 5.109243697478991,
+        "max_reward": 1.0,
+        "avg_reward": 0.0063380963220003314,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 5000,
+        "tree_size": 1745,
+        "max_depth": 10,
+        "avg_depth": 5.299140401146132,
+        "max_reward": 1.0,
+        "avg_reward": 0.008736326932863678,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 5000,
+        "tree_size": 2849,
+        "max_depth": 9,
+        "avg_depth": 5.589329589329589,
+        "max_reward": 1.0,
+        "avg_reward": 0.00972490666106122,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 5000,
+        "tree_size": 2975,
+        "max_depth": 7,
+        "avg_depth": 5.559663865546218,
+        "max_reward": 1.0,
+        "avg_reward": 0.005062494102565873,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 10000,
+        "tree_size": 1009,
+        "max_depth": 10,
+        "avg_depth": 4.824578790882062,
+        "max_reward": 1.0,
+        "avg_reward": 0.013970356235359298,
+        "policy_path": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 10000,
+        "tree_size": 1378,
+        "max_depth": 11,
+        "avg_depth": 5.187227866473149,
+        "max_reward": 1.0,
+        "avg_reward": 0.010367541376125066,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 10000,
+        "tree_size": 2741,
+        "max_depth": 11,
+        "avg_depth": 5.725647573878146,
+        "max_reward": 1.0,
+        "avg_reward": 0.01658488167392277,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 10000,
+        "tree_size": 4374,
+        "max_depth": 10,
+        "avg_depth": 6.045724737082762,
+        "max_reward": 1.0,
+        "avg_reward": 0.013415733221023803,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    }
+]
