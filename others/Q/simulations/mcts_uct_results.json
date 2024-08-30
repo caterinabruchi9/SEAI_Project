@@ -1,0 +1,685 @@
+[
+    {
+        "exploration_constant": 0.5,
+        "steps": 1000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 1000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            1,
+            2
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 1000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            0,
+            1
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 1000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 5000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            1,
+            2,
+            2
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 5000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            4,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 5000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            1,
+            2,
+            6
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 5000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 10000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            1,
+            0,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 10000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 10000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 10000,
+        "tree_size": 77,
+        "max_depth": 3,
+        "avg_depth": 2.6493506493506493,
+        "policy_path": [
+            0,
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 1000,
+        "tree_size": 706,
+        "max_depth": 5,
+        "avg_depth": 4.4660056657223794,
+        "policy_path": [
+            0,
+            1,
+            2,
+            2,
+            1
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 1000,
+        "tree_size": 701,
+        "max_depth": 5,
+        "avg_depth": 4.462196861626248,
+        "policy_path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 1000,
+        "tree_size": 708,
+        "max_depth": 5,
+        "avg_depth": 4.4675141242937855,
+        "policy_path": [
+            0,
+            0,
+            1,
+            2,
+            1,
+            1
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 1000,
+        "tree_size": 702,
+        "max_depth": 5,
+        "avg_depth": 4.462962962962963,
+        "policy_path": [
+            0,
+            0,
+            0,
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 5000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 5000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 5000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 5000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            4,
+            0,
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 10000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 10000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            1,
+            2,
+            1,
+            2,
+            2
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 10000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            0,
+            1,
+            2,
+            1,
+            2
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 10000,
+        "tree_size": 945,
+        "max_depth": 5,
+        "avg_depth": 4.601058201058201,
+        "policy_path": [
+            0,
+            4,
+            4,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "policy_path": [
+            0,
+            4,
+            4,
+            8,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 1000,
+        "tree_size": 708,
+        "max_depth": 5,
+        "avg_depth": 4.4675141242937855,
+        "policy_path": [
+            0,
+            4,
+            0,
+            4,
+            4,
+            8
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 1000,
+        "tree_size": 709,
+        "max_depth": 5,
+        "avg_depth": 4.468265162200282,
+        "policy_path": [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 1000,
+        "tree_size": 707,
+        "max_depth": 5,
+        "avg_depth": 4.466760961810467,
+        "policy_path": [
+            0,
+            1,
+            1,
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 5000,
+        "tree_size": 1337,
+        "max_depth": 6,
+        "avg_depth": 5.011219147344802,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 5000,
+        "tree_size": 1983,
+        "max_depth": 6,
+        "avg_depth": 5.333333333333333,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 5000,
+        "tree_size": 2407,
+        "max_depth": 6,
+        "avg_depth": 5.450768591607811,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 5000,
+        "tree_size": 2502,
+        "max_depth": 6,
+        "avg_depth": 5.4716227018385295,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 10000,
+        "tree_size": 2301,
+        "max_depth": 6,
+        "avg_depth": 5.425467188179052,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 10000,
+        "tree_size": 1249,
+        "max_depth": 6,
+        "avg_depth": 4.941553242594075,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 10000,
+        "tree_size": 2271,
+        "max_depth": 6,
+        "avg_depth": 5.417877586966094,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 10000,
+        "tree_size": 2501,
+        "max_depth": 6,
+        "avg_depth": 5.471411435425829,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "policy_path": [
+            0,
+            0,
+            0,
+            1
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "policy_path": [
+            0,
+            4,
+            0,
+            4,
+            8,
+            9
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "policy_path": [
+            0,
+            1,
+            1,
+            2,
+            3,
+            3
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 1000,
+        "tree_size": 705,
+        "max_depth": 5,
+        "avg_depth": 4.465248226950354,
+        "policy_path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 5000,
+        "tree_size": 1569,
+        "max_depth": 6,
+        "avg_depth": 5.157425111536011,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 5000,
+        "tree_size": 1818,
+        "max_depth": 7,
+        "avg_depth": 5.276127612761276,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 5000,
+        "tree_size": 2295,
+        "max_depth": 7,
+        "avg_depth": 5.433115468409586,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 5000,
+        "tree_size": 2466,
+        "max_depth": 7,
+        "avg_depth": 5.487429034874291,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.5,
+        "steps": 10000,
+        "tree_size": 1643,
+        "max_depth": 7,
+        "avg_depth": 5.1972002434570905,
+        "policy_path": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 0.7071067811865475,
+        "steps": 10000,
+        "tree_size": 1256,
+        "max_depth": 7,
+        "avg_depth": 4.955414012738854,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 1.4,
+        "steps": 10000,
+        "tree_size": 2292,
+        "max_depth": 7,
+        "avg_depth": 5.43542757417103,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ]
+    },
+    {
+        "exploration_constant": 2.0,
+        "steps": 10000,
+        "tree_size": 2472,
+        "max_depth": 7,
+        "avg_depth": 5.489886731391586,
+        "policy_path": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    }
+]
