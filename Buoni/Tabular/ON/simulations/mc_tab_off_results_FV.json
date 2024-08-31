@@ -1,0 +1,37 @@
+[
+    {
+        "type": "FV",
+        "steps": 1000,
+        "non_zero_entries": 34,
+        "average_q_value": 0.292329480869579,
+        "final_rewards": 1.0
+    },
+    {
+        "type": "EV",
+        "steps": 1000,
+        "non_zero_entries": 34,
+        "average_q_value": 0.23189199395206822,
+        "final_rewards": 1.0
+    },
+    {
+        "type": "FV",
+        "steps": 5000,
+        "non_zero_entries": 35,
+        "average_q_value": 0.2587932813705085,
+        "final_rewards": 1.0
+    },
+    {
+        "type": "EV",
+        "steps": 5000,
+        "non_zero_entries": 35,
+        "average_q_value": 0.25527331514805274,
+        "final_rewards": 1.0
+    },
+    {
+        "type": "FV",
+        "steps": 10000,
+        "non_zero_entries": 35,
+        "average_q_value": 0.2526135151792362,
+        "final_rewards": 1.0
+    }
+]
