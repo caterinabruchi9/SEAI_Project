@@ -1,82 +1,437 @@
 [
     {
-        "steps": 5000,
-        "max_simulations": 50,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.16167333333333334,
+        "steps": 800,
+        "max_simulation_depth": 5,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.011291666666666667,
         "final_path_v1": [
             0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ],
-        "avg_reward_v2": 0.0066,
-        "final_path_v2": [
             0,
-            4,
-            8,
-            8,
-            9,
+            1,
+            2,
+            6,
             10,
-            14
-        ]
-    },
-    {
-        "steps": 5000,
-        "max_simulations": 50,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.15568063492063494,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            13,
+            14,
             14
         ],
-        "avg_reward_v2": 0.0106,
+        "avg_reward_v2": 0.01125,
         "final_path_v2": [
             0,
             4,
-            4,
             8,
-            9,
-            13,
-            14
+            8
         ]
     },
     {
-        "steps": 5000,
-        "max_simulations": 50,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.26897112554112557,
+        "steps": 800,
+        "max_simulation_depth": 5,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.0096875,
         "final_path_v1": [
             0,
             4,
             8,
             9,
             10,
+            14,
+            13,
             14
         ],
-        "avg_reward_v2": 0.0104,
+        "avg_reward_v2": 0.00375,
         "final_path_v2": [
             0,
+            4,
+            8,
+            9
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 5,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.008479166666666666,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.00125,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9,
+            13
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 6,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.009375000000000001,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.00875,
+        "final_path_v2": [
+            0,
+            4,
+            8
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 6,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.011145833333333334,
+        "final_path_v1": [
+            0,
+            0,
+            4,
+            4,
+            4,
+            0,
+            4,
+            8,
+            9,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.00125,
+        "final_path_v2": [
+            0,
+            4
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 6,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.0134375,
+        "final_path_v1": [
+            0,
+            0,
+            0,
+            4,
+            8,
+            9,
+            13,
+            14,
+            14
+        ],
+        "avg_reward_v2": 0.005,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9,
+            13
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 7,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.005907738095238095,
+        "final_path_v1": [
             0,
             0,
             0,
             1,
             2,
-            2,
-            2
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.0075,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
         ]
     },
     {
-        "steps": 5000,
-        "max_simulations": 100,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.01992,
+        "steps": 800,
+        "max_simulation_depth": 7,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.009208333333333334,
+        "final_path_v1": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.01125,
+        "final_path_v2": [
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "steps": 800,
+        "max_simulation_depth": 7,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.010520833333333335,
+        "final_path_v1": [
+            0,
+            0,
+            0,
+            4,
+            4,
+            8,
+            9,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.01,
+        "final_path_v2": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            4
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 5,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.004083333333333333,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            4,
+            8,
+            9,
+            10,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.007,
+        "final_path_v2": [
+            0,
+            0,
+            1,
+            2,
+            6,
+            10
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 5,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.008733333333333333,
+        "final_path_v1": [
+            0,
+            1,
+            2,
+            6,
+            2,
+            2,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.004,
+        "final_path_v2": [
+            0,
+            1,
+            0,
+            4,
+            8,
+            9
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 5,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.008866666666666667,
+        "final_path_v1": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.009,
+        "final_path_v2": [
+            0,
+            0,
+            1,
+            0,
+            4,
+            8,
+            4
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 6,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.006116666666666667,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            9,
+            13,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.012,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            8,
+            9,
+            13
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 6,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.007366666666666667,
+        "final_path_v1": [
+            0,
+            0,
+            4,
+            8,
+            9,
+            13,
+            13,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.003,
+        "final_path_v2": [
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 6,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.0075,
+        "final_path_v1": [
+            0,
+            4,
+            4,
+            0,
+            1,
+            1,
+            2,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.004,
+        "final_path_v2": [
+            0,
+            4
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 7,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.004183333333333333,
+        "final_path_v1": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            6,
+            2,
+            6,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.005,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 7,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.008616666666666667,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            9,
+            13,
+            14,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.009,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9
+        ]
+    },
+    {
+        "steps": 1000,
+        "max_simulation_depth": 7,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.008666666666666668,
+        "final_path_v1": [
+            0,
+            4,
+            4,
+            8,
+            9,
+            13,
+            14
+        ],
+        "avg_reward_v2": 0.008,
+        "final_path_v2": [
+            0,
+            4
+        ]
+    },
+    {
+        "steps": 3000,
+        "max_simulation_depth": 5,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.011333333333333334,
         "final_path_v1": [
             0,
             4,
@@ -90,87 +445,14 @@
             0,
             4,
             8,
-            9,
-            13,
-            13,
-            14
+            9
         ]
     },
     {
-        "steps": 5000,
-        "max_simulations": 100,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.13789920634920635,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ],
-        "avg_reward_v2": 0.0094,
-        "final_path_v2": [
-            0,
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ]
-    },
-    {
-        "steps": 5000,
-        "max_simulations": 100,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.18491075442101756,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ],
-        "avg_reward_v2": 0.0162,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ]
-    },
-    {
-        "steps": 5000,
-        "max_simulations": 200,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.24115333333333333,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ],
-        "avg_reward_v2": 0.0058,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ]
-    },
-    {
-        "steps": 5000,
-        "max_simulations": 200,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.20295269841269842,
+        "steps": 3000,
+        "max_simulation_depth": 5,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.01152222222222222,
         "final_path_v1": [
             0,
             4,
@@ -179,137 +461,22 @@
             10,
             14
         ],
-        "avg_reward_v2": 0.0076,
+        "avg_reward_v2": 0.005333333333333333,
         "final_path_v2": [
             0,
             4,
             8,
             9,
             10,
-            14
-        ]
-    },
-    {
-        "steps": 5000,
-        "max_simulations": 200,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.14439142357642357,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ],
-        "avg_reward_v2": 0.0114,
-        "final_path_v2": [
-            0,
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ]
-    },
-    {
-        "steps": 10000,
-        "max_simulations": 50,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.54,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
-        ],
-        "avg_reward_v2": 0.0064,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ]
-    },
-    {
-        "steps": 10000,
-        "max_simulations": 50,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.5579946031746031,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ],
-        "avg_reward_v2": 0.0108,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ]
-    },
-    {
-        "steps": 10000,
-        "max_simulations": 50,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.5805592484721162,
-        "final_path_v1": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ],
-        "avg_reward_v2": 0.0117,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            10,
-            14
-        ]
-    },
-    {
-        "steps": 10000,
-        "max_simulations": 100,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.523055,
-        "final_path_v1": [
-            0,
-            1,
-            2,
             6,
-            10,
-            14
-        ],
-        "avg_reward_v2": 0.0062,
-        "final_path_v2": [
-            0,
-            4,
-            8,
-            9,
-            13,
-            14
+            2
         ]
     },
     {
-        "steps": 10000,
-        "max_simulations": 100,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.5014623809523809,
+        "steps": 3000,
+        "max_simulation_depth": 5,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.013427777777777776,
         "final_path_v1": [
             0,
             4,
@@ -318,45 +485,66 @@
             13,
             14
         ],
-        "avg_reward_v2": 0.0109,
+        "avg_reward_v2": 0.006333333333333333,
         "final_path_v2": [
-            0,
-            0,
             0,
             4,
             8,
             9,
+            13,
             13
         ]
     },
     {
-        "steps": 10000,
-        "max_simulations": 100,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.4899927897102897,
+        "steps": 3000,
+        "max_simulation_depth": 6,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.007894444444444444,
         "final_path_v1": [
             0,
+            0,
+            4,
             4,
             8,
             9,
             13,
             14
         ],
-        "avg_reward_v2": 0.0149,
+        "avg_reward_v2": 0.008,
         "final_path_v2": [
             0,
             4,
             8,
             9,
-            13,
-            14
+            8,
+            9
         ]
     },
     {
-        "steps": 10000,
-        "max_simulations": 200,
-        "max_rollout_steps": 5,
-        "avg_reward_v1": 0.499245,
+        "steps": 3000,
+        "max_simulation_depth": 6,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.00883888888888889,
+        "final_path_v1": [
+            0,
+            4,
+            8,
+            9,
+            10,
+            14
+        ],
+        "avg_reward_v2": 0.004,
+        "final_path_v2": [
+            0,
+            1,
+            1
+        ]
+    },
+    {
+        "steps": 3000,
+        "max_simulation_depth": 6,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.01557777777777778,
         "final_path_v1": [
             0,
             4,
@@ -365,21 +553,18 @@
             13,
             14
         ],
-        "avg_reward_v2": 0.0067,
+        "avg_reward_v2": 0.007333333333333333,
         "final_path_v2": [
             0,
             4,
-            8,
-            9,
-            13,
-            14
+            4
         ]
     },
     {
-        "steps": 10000,
-        "max_simulations": 200,
-        "max_rollout_steps": 10,
-        "avg_reward_v1": 0.6056718650793651,
+        "steps": 3000,
+        "max_simulation_depth": 7,
+        "max_expansions": 5,
+        "avg_reward_v1": 0.010315079365079364,
         "final_path_v1": [
             0,
             4,
@@ -388,7 +573,7 @@
             13,
             14
         ],
-        "avg_reward_v2": 0.0104,
+        "avg_reward_v2": 0.014,
         "final_path_v2": [
             0,
             4,
@@ -400,10 +585,10 @@
         ]
     },
     {
-        "steps": 10000,
-        "max_simulations": 200,
-        "max_rollout_steps": 20,
-        "avg_reward_v1": 0.6111911981379472,
+        "steps": 3000,
+        "max_simulation_depth": 7,
+        "max_expansions": 6,
+        "avg_reward_v1": 0.03866666666666667,
         "final_path_v1": [
             0,
             4,
@@ -412,13 +597,32 @@
             10,
             14
         ],
-        "avg_reward_v2": 0.0141,
+        "avg_reward_v2": 0.006666666666666667,
         "final_path_v2": [
+            0,
+            4
+        ]
+    },
+    {
+        "steps": 3000,
+        "max_simulation_depth": 7,
+        "max_expansions": 7,
+        "avg_reward_v1": 0.010653174603174604,
+        "final_path_v1": [
             0,
             4,
             8,
             9,
             13,
+            14
+        ],
+        "avg_reward_v2": 0.007,
+        "final_path_v2": [
+            0,
+            4,
+            8,
+            9,
+            10,
             14
         ]
     }
