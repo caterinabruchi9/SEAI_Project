@@ -1,11 +1,10 @@
 [
     {
-        "steps": 1000,
-        "tree_size": 697,
-        "max_depth": 6,
-        "avg_depth": 4.500717360114778,
+        "steps": 800,
+        "tree_size": 450,
+        "max_depth": 12,
+        "avg_depth": 5.455555555555556,
         "policy_path": [
-            0,
             0,
             4,
             8,
@@ -15,30 +14,44 @@
         ]
     },
     {
-        "steps": 5000,
-        "tree_size": 2939,
-        "max_depth": 7,
-        "avg_depth": 5.654304185096972,
+        "steps": 1000,
+        "tree_size": 641,
+        "max_depth": 11,
+        "avg_depth": 5.686427457098284,
         "policy_path": [
             0,
-            0,
-            4,
-            8,
-            9,
+            1,
+            2,
+            2,
+            6,
             10,
-            9
+            14
+        ]
+    },
+    {
+        "steps": 5000,
+        "tree_size": 1907,
+        "max_depth": 14,
+        "avg_depth": 6.7299423177766124,
+        "policy_path": [
+            0,
+            1,
+            2,
+            6,
+            10,
+            14
         ]
     },
     {
         "steps": 10000,
-        "tree_size": 5382,
-        "max_depth": 8,
-        "avg_depth": 6.16164994425864,
+        "tree_size": 3362,
+        "max_depth": 14,
+        "avg_depth": 7.297739440809043,
         "policy_path": [
             0,
-            4,
-            8,
-            9,
+            1,
+            2,
+            6,
             10,
             14
         ]
