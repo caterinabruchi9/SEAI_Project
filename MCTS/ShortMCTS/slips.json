@@ -1,7 +1,12 @@
 [
     {
-        "from_state": 10,
-        "action": 3,
-        "slipped_to_state": 6
+        "from_state": 8,
+        "action": 1,
+        "slipped_to_state": 12
+    },
+    {
+        "from_state": 8,
+        "action": 1,
+        "slipped_to_state": 12
     }
 ]
